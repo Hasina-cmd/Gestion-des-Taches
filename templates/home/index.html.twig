@@ -1,0 +1,16 @@
+﻿{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Gestion des taches</h1>
+
+    <a href="{{ path('app_task_index') }}" class="btn btn-primary">
+        Voir mes taches
+    </a>
+    <a href="{{ path('app_dashboard') }}" class="btn btn-secondary">
+        Tableau de bord
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mes t&acirc;ches{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="m-0">Mes t&acirc;ches</h1>
+        <a href="{{ path('app_task_new') }}" class="btn btn-primary">+ Nouvelle t&acirc;che</a>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {% if tasks is empty %}
+        <p class="text-muted">Aucune t&acirc;che pour le moment.</p>
+    {% else %}
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Statut</th>
+                    <th>Date limite</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>
+                        {% if task.status == 'done' %}
+                            <span class="badge bg-success">Termin&eacute;e</span>
+                        {% elseif task.status == 'in_progress' %}
+                            <span class="badge bg-warning text-dark">En cours</span>
+                        {% else %}
+                            <span class="badge bg-secondary">&Agrave; faire</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ task.dueDate ? task.dueDate|date('d/m/Y H:i') : '-' }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('app_task_show', {id: task.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                        <a href="{{ path('app_task_edit', {id: task.id}) }}" class="btn btn-sm btn-outline-primary">Modifier</a>
+                        <form method="post" action="{{ path('app_task_delete', {id: task.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer cette t&acirc;che ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ task.id) }}">
+                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
